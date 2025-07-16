@@ -504,30 +504,8 @@
                 },
                 {
                     "name": "",
-                    "id": "e0a5ff19-e675-4ffb-a7f5-2834c030705a",
-                    "path": "<Keyboard>/leftArrow",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MoveLeft",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "f34ee411-aff4-4492-83ce-014e87f0f3ad",
                     "path": "<Keyboard>/d",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MoveRight",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9261e1f0-f4ae-477d-a5ae-d99f94a0c8eb",
-                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

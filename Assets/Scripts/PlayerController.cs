@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
 
     Vector2 WASD;
     Vector3 goal_position = Vector2.zero;
-    float current_speed;
+
+    public static PlayerController instance;
 
     private Lane current_lane = Lane.Middle;
     [SerializeField] float lane_change_speed;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
         Player = player;
     }
 
@@ -64,14 +66,21 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void StartTurn()
+    public void StartTurn(Transform section)
     {
         if (WASD.x < 0)
-            GameManager.StartTurn(Lane.Left);
+            GameManager.instance.StartTurn(Lane.Left, section);
         else if (WASD.x > 0)
-            GameManager.StartTurn(Lane.Right);
+            GameManager.instance.StartTurn(Lane.Right, section);
         else
-            GameManager.StartTurn(Lane.Middle);
+            GameManager.instance.StartTurn(Lane.Middle, section);
+    }
+
+    public Vector2 GetCurrentINPUT()
+    {
+        Debug.Log(WASD);
+        return WASD;
+
     }
 
     

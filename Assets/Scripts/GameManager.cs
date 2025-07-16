@@ -1,8 +1,8 @@
-using Unity.VisualScripting;
-using UnityEditor.Animations;
-using UnityEditor.Experimental.GraphView;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using TMPro;
+using Mono.Cecil.Cil;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +11,45 @@ public class GameManager : MonoBehaviour
 
     public static int render_distance = 10;
 
+    Dictionary<string, Vector2> instructionList = new Dictionary<string, Vector2>() {
+
+        { "HOLD UP", Vector2.up },
+        { "HOLD RIGHT", Vector2.right },
+        { "HOLD DOWN", Vector2.down },
+        { "HOLD LEFT", Vector2.left },
+        { "HOLD NOTHING", Vector2.zero }
+
+    };
+
+    string[] wordsLOL =
+    {
+        "",
+        "3!",
+        "2!",
+        "1!",
+        "GO!",
+        "",
+        "",
+        "",
+        "",
+        ""
+    };
+
+    List<string> instructionListWords;
+
+    Vector2 current_goal = Vector2.zero;
+
+    public static GameManager instance;
+
     //simply here because you can't assign to static fields in the inspector and i'm too stupid to figure out a better solution
     //and also i'm a fan of using static fields + functions
     [SerializeField] Transform spp;
     [SerializeField] GameObject section;
     [SerializeField] Transform goal_direction;
+
+    [SerializeField] TMP_Text instructions_text;
+
+    [SerializeField] float course_correct = 10f;
 
     static Transform world;
     [SerializeField] Transform current_direction;
@@ -35,6 +69,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        instance = this;
+        instructionListWords = new List<string>(instructionList.Keys);
         world = transform.GetChild(0);
         spawn_platform_point = spp;
         Sect = section;
@@ -57,42 +93,65 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (turning.Equals(PlayerController.Lane.Middle)) {
 
-        if (turning.Equals(PlayerController.Lane.Middle))
-        {
+            world.rotation = Goal_Direction.rotation;
+
             for (int i = 0; i < world.childCount; i++)
             {
-                world.GetChild(i).position += (-current_direction.forward) * current_speed * Time.deltaTime;
+                Transform sec = world.GetChild(i);
+                sec.position += (-Vector3.forward) * current_speed * Time.deltaTime;
+
+                sec.position = Vector3.MoveTowards(sec.position, new Vector3(Mathf.Round(sec.position.x / 10) * 10, sec.position.y, sec.position.z), Time.deltaTime * course_correct);
+               
             }
         }
+
         else
         {
             int dir_int = 1 - (int) turning;
             ContinueTurn(dir_int);
 
-            if (Mathf.Abs(world.transform.rotation.eulerAngles.z - goal_direction.rotation.eulerAngles.z) < 0.1)
+            if (Mathf.Abs(world.transform.rotation.eulerAngles.y - goal_direction.rotation.eulerAngles.y) < 3f)
             {
                 world.transform.rotation = Goal_Direction.rotation;
+                turning = PlayerController.Lane.Middle;
             }
-
             
-            
-            turning = PlayerController.Lane.Middle;
         }
     }
 
-    public static void StartTurn(PlayerController.Lane direction)
+    public void StartTurn(PlayerController.Lane direction, Transform section_pos)
     {
         turning = direction;
-        Goal_Direction.RotateAround(Vector3.zero, Vector3.up, 1 - (int)turning * 90);
-        spawn_platform_point.RotateAround(Vector3.zero, Vector3.up, 1 - (int)turning * 90);
-        spawn_platform_point.position += spawn_platform_point.forward * SectionSize;
+        Goal_Direction.RotateAround(Vector3.zero, Vector3.up, (1 - (int)turning) * 90);
 
-        for (int i = 0; i < render_distance; i++)
+        if (direction != PlayerController.Lane.Middle)
         {
-            GenerateNewSection();
+
+            spawn_platform_point.RotateAround(Vector3.zero, Vector3.down, (1 - (int)turning) * 90);
+            spawn_platform_point.position = section_pos.position;
+            spawn_platform_point.position += spawn_platform_point.forward * SectionSize;
+
+            for (int i = 0; i < render_distance; i++)
+            {
+                GenerateNewSection();
+            }
+
         }
-        Debug.Log("turned" + direction.ToString());
+
+    }
+
+    void ContinueTurn(int dir_int)
+    {
+
+        world.RotateAround(Vector3.zero, transform.up, Mathf.Rad2Deg * dir_int * current_speed * Time.deltaTime / (SectionSize / 2f));
+
+        for (int i = 0; i < world.childCount; i++)
+        {
+            Transform sec = world.GetChild(i);
+            sec.position += (-Vector3.forward) * current_speed * Time.deltaTime;
+        }
 
     }
 
@@ -110,20 +169,43 @@ public class GameManager : MonoBehaviour
         var new_section = Instantiate(Sect, spawn_platform_point);
         new_section.transform.parent = world;
 
-        if (Random.value < 0.15)
+
+        if (distance_travelled % 10 == 0)
         {
-            new_section.GetComponent<Section>().section_type = Section.type.turn;
+            instance.Instruction();
+        }
+        else if (distance_travelled % 10 == 5)
+        {
+            instance.InstructionCheck();
+        } else
+        {
+            instance.instructions_text.text = instance.wordsLOL[generated % 10];
         }
 
         spawn_platform_point.position += spawn_platform_point.forward * SectionSize;
 
     }
 
-    void ContinueTurn(int dir_int) {
+    public void Instruction()
+    {
 
-        float r = 5f - Mathf.Abs(PlayerController.Player.position.x);
+        string instr = instructionListWords[Random.Range(0, instructionListWords.Count)];
 
-        world.RotateAround(Vector3.zero, transform.up, Mathf.Rad2Deg * dir_int * current_speed * Time.deltaTime / r);
+        instructions_text.text = instr;
+        current_goal = instructionList[instr];
 
     }
+
+    public void InstructionCheck()
+    {
+        if (PlayerController.instance.GetCurrentINPUT().Equals(current_goal))
+        {
+            Debug.Log("PASS");
+        } else
+        {
+            Debug.Log("FAIL");
+        }
+    }
+
+
 }

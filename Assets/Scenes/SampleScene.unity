@@ -320,8 +320,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 95debc92e42096c4fa29d6ff333717dd, type: 2}
+  m_sharedMaterial: {fileID: 2461086738396814487, guid: 95debc92e42096c4fa29d6ff333717dd, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1360,11 +1360,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ce5c3317f5ee414fadf694f1737e075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  render_distance: 10
   spp: {fileID: 278910417}
   section: {fileID: 3014294941881103664, guid: 5e98a0abbbab2a34e8512a75260c50e3, type: 3}
-  current_direction: {fileID: 1823048489}
   goal_direction: {fileID: 525844648}
+  instructions_text: {fileID: 283872584}
+  course_correct: 10
+  current_direction: {fileID: 1823048489}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

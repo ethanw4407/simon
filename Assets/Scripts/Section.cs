@@ -5,6 +5,8 @@ using static PlayerController;
 public class Section : MonoBehaviour
 {
 
+    [SerializeField] float destroy_behind = 10f;
+
     public
     enum type { 
         basic,
@@ -14,23 +16,10 @@ public class Section : MonoBehaviour
 
     public type section_type;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
         PlayerController player_check = other.transform.parent.GetComponent<PlayerController>();
-        Debug.Log(other.name);
-        
 
         if (player_check != null)
         {
@@ -41,7 +30,7 @@ public class Section : MonoBehaviour
                 case type.basic:
                     break;
                 case type.turn:
-                    player_check.StartTurn();
+                    player_check.StartTurn(transform);
                     break;
                 case type.new_instruction:
                     break;
@@ -49,5 +38,11 @@ public class Section : MonoBehaviour
             }
             
         }
+    }
+
+    private void Update()
+    {
+        if (transform.position.z < -destroy_behind)
+            Destroy(gameObject);
     }
 }
