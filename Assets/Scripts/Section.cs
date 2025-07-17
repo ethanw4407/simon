@@ -11,7 +11,8 @@ public class Section : MonoBehaviour
     enum type { 
         basic,
         turn, 
-        new_instruction
+        doors,
+
     }
 
     public type section_type;
@@ -24,15 +25,13 @@ public class Section : MonoBehaviour
         if (player_check != null)
         {
 
-            GameManager.TraversedSection();
+            GameManager.instance.TraversedSection(transform);
 
             switch (section_type) {
                 case type.basic:
                     break;
                 case type.turn:
                     player_check.StartTurn(transform);
-                    break;
-                case type.new_instruction:
                     break;
 
             }

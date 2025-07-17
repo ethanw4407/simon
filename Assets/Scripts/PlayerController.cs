@@ -16,12 +16,11 @@ public class PlayerController : MonoBehaviour
 
     public static PlayerController instance;
 
-    private Lane current_lane = Lane.Middle;
+    public Lane current_lane = Lane.Middle;
     [SerializeField] float lane_change_speed;
 
     public static Transform player_transform;
 
-    Rigidbody rb;
     PlayerInput input;
 
 
@@ -40,7 +39,6 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
         input = GetComponent<PlayerInput>();
         player_transform = GetComponent<Transform>();
     }
@@ -78,7 +76,6 @@ public class PlayerController : MonoBehaviour
 
     public Vector2 GetCurrentINPUT()
     {
-        Debug.Log(WASD);
         return WASD;
 
     }
@@ -98,5 +95,20 @@ public class PlayerController : MonoBehaviour
     private void OnMoveRight()
     {
         current_lane = (Lane)Mathf.Clamp((int)(current_lane + 1), 0, 2);
+    }
+
+    private void OnJ()
+    {
+        GameManager.instance.jklPressed[0]++;
+    }
+
+    private void OnK()
+    {
+        GameManager.instance.jklPressed[1]++;
+    }
+
+    private void OnL()
+    {
+        GameManager.instance.jklPressed[2]++;
     }
 }
