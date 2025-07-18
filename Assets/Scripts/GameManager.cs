@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     static Transform Goal_Direction;
 
-    public static float current_speed = 15f;
+    public static float current_speed = 30f;
 
     public static float rotate_speed = 1f;
 
@@ -203,19 +203,20 @@ public class GameManager : MonoBehaviour
         distance_travelled++;
 
         spawn_special.position = section.position + (section.forward * SectionSize * 5);
+        spawn_special.rotation = spawn_platform_point.rotation;
 
 
 
         GenerateNewSection();
 
-        if (distance_travelled < 5f)
+        if (distance_travelled < 8f)
             return;
 
         if (distance_travelled % 10 == 0)
         {
             instance.Instruction();
 
-            current_speed++;
+            current_speed+=0.5f;
         }
         else if (distance_travelled % 10 == 5)
         {
@@ -245,8 +246,10 @@ public class GameManager : MonoBehaviour
     {
         //STRUGGLE CODE ATP TS IS KILLING ME LOL
         //UGLIEST CODE IN THE WEST
-        int instrType = Random.Range(0, 5);
+        int instrType = Random.Range(0, 4);
+
         current_instruction = instrType;
+
 
         string instr = "";
 
@@ -289,7 +292,7 @@ public class GameManager : MonoBehaviour
                         goal_turn = PlayerController.Lane.Left;
                         break;
                     case 1:
-                        instr = "Keep going SRAIGHT";
+                        instr = "Keep going STRAIGHT";
                         goal_turn = PlayerController.Lane.Middle;
                         break;
                     case 2:
@@ -301,7 +304,11 @@ public class GameManager : MonoBehaviour
 
                 //generate the turn
 
-                Instantiate(turn_platform, spawn_special).transform.SetParent(world.transform);
+                Transform new_turn = Instantiate(turn_platform, spawn_special).transform;
+
+                new_turn.SetParent(world.transform);
+                new_turn.rotation = Quaternion.identity;
+
 
                 break;
         }

@@ -7,6 +7,8 @@ public class Section : MonoBehaviour
 
     [SerializeField] float destroy_behind = 10f;
 
+
+
     public
     enum type { 
         basic,
@@ -36,6 +38,13 @@ public class Section : MonoBehaviour
 
             }
             
+        }
+
+        var animator = GetComponent<Animator>();
+
+        if (animator != null)
+        {
+            animator.SetTrigger("OPEN");
         }
     }
 

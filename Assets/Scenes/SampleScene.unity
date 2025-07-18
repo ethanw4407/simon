@@ -1591,10 +1591,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jklPressed: 000000000000000000000000
   spp: {fileID: 278910417}
-  section: {fileID: 3014294941881103664, guid: 5e98a0abbbab2a34e8512a75260c50e3, type: 3}
+  section: {fileID: 4837012342740547005, guid: 647c80ee8faccd04fbfb76285e0e4d53, type: 3}
   goal_direction: {fileID: 525844648}
   spawn_special: {fileID: 1292312000}
-  turn_platform: {fileID: 3014294941881103664, guid: 93a443ecf81b2ac4bb3b67cc9124c1b1, type: 3}
+  turn_platform: {fileID: 8362162646546586063, guid: cb52d67a13ce7d147bcf0e118ae4b1e2, type: 3}
   instructions_text: {fileID: 283872584}
   course_correct: 10
   current_direction: {fileID: 1823048489}
