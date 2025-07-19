@@ -50,9 +50,9 @@ public class GameManager : MonoBehaviour
     string[] wordsLOL =
     {
         "",
-        "...",
-        "...",
-        "...",
+        "3!",
+        "2!",
+        "1!",
         "GO!",
         "",
         "",
@@ -113,6 +113,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Color blue;
     [SerializeField] Color orange;
+
+    [SerializeField] TMP_Text distance_text;
+    [SerializeField] GameObject death_SCREEN;
 
     private void Awake()
     {
@@ -210,6 +213,8 @@ public class GameManager : MonoBehaviour
 
         distance_travelled++;
 
+        distance_text.text = "Distance Travelled: " + distance_travelled;
+
         spawn_special.position = section.position + (section.forward * SectionSize * 5);
         spawn_special.rotation = spawn_platform_point.rotation;
 
@@ -239,7 +244,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            instructionCanvas.SetActive(false);
 
         }
     }
@@ -428,6 +432,8 @@ public class GameManager : MonoBehaviour
     void Fail()
     {
         instructions_text.text = "Nope!";
+        current_speed = 0f;
+        death_SCREEN.SetActive(true);
     }
 
 
