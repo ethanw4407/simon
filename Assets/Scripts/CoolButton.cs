@@ -9,5 +9,15 @@ public class CoolButton : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
+    public void Quit()
+    {
+        Application.Quit();
+    }
+
+    public void Menu()
+    {
+        SceneManager.LoadScene(0);
+    }
+
 
 }

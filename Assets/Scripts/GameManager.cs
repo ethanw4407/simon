@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using TMPro;
 using Mono.Cecil.Cil;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class GameManager : MonoBehaviour
     public static int render_distance = 10;
 
     int current_instruction;
+
+    public GameObject instructionCanvas;
 
     public int[] jklPressed = new int[3];
     string[] keys = { 
@@ -37,9 +40,9 @@ public class GameManager : MonoBehaviour
 
     Dictionary<string, PlayerController.Lane> doorInstructionList = new Dictionary<string, PlayerController.Lane>()
     {
-        { "LEFT DOOR", PlayerController.Lane.Left },
-        { "RIGHT DOOR", PlayerController.Lane.Right },
-        { "MIDDLE DOOR", PlayerController.Lane.Middle }
+        { "LEFT LANE", PlayerController.Lane.Left },
+        { "RIGHT LANE", PlayerController.Lane.Right },
+        { "MIDDLE LANE", PlayerController.Lane.Middle }
     };
 
     List<string> doorInstructionListWords;
@@ -47,9 +50,9 @@ public class GameManager : MonoBehaviour
     string[] wordsLOL =
     {
         "",
-        "...",
-        "...",
-        "...",
+        "3!",
+        "2!",
+        "1!",
         "GO!",
         "",
         "",
@@ -105,6 +108,14 @@ public class GameManager : MonoBehaviour
 
     static PlayerController.Lane turning = PlayerController.Lane.Middle;
     static bool is_turning = false;
+
+    public static bool LYING = false;
+
+    [SerializeField] Color blue;
+    [SerializeField] Color orange;
+
+    [SerializeField] TMP_Text distance_text;
+    [SerializeField] GameObject death_SCREEN;
 
     private void Awake()
     {
@@ -202,6 +213,8 @@ public class GameManager : MonoBehaviour
 
         distance_travelled++;
 
+        distance_text.text = "Distance Travelled: " + distance_travelled;
+
         spawn_special.position = section.position + (section.forward * SectionSize * 5);
         spawn_special.rotation = spawn_platform_point.rotation;
 
@@ -217,6 +230,9 @@ public class GameManager : MonoBehaviour
             instance.Instruction();
 
             current_speed+=0.5f;
+
+
+            instructionCanvas.SetActive(true);
         }
         else if (distance_travelled % 10 == 5)
         {
@@ -248,6 +264,14 @@ public class GameManager : MonoBehaviour
         //UGLIEST CODE IN THE WEST
         int instrType = Random.Range(0, 4);
 
+        float isLying = Random.value;
+
+        LYING = isLying <= 0.25f;
+
+        instructions_text.color = LYING ? blue : orange;
+
+
+
         current_instruction = instrType;
 
 
@@ -263,7 +287,15 @@ public class GameManager : MonoBehaviour
                 break;
             case 1: //DOORS
 
-                instr = doorInstructionListWords[Random.Range(0, doorInstructionListWords.Count)];
+                int doorNum = Random.Range(0, doorInstructionListWords.Count);      
+
+                if (doorInstructionList[doorInstructionListWords[Random.Range(0, doorInstructionListWords.Count)]] == PlayerController.instance.current_lane) {
+                    doorNum += 1;
+                    doorNum %= 3;
+
+                }
+
+                instr = doorInstructionListWords[doorNum];
 
                 goal_door = doorInstructionList[instr];
 
@@ -320,11 +352,17 @@ public class GameManager : MonoBehaviour
     public void InstructionCheck()
     {
 
+        bool condition;
+
         switch (current_instruction)
         {
             case 0:
 
-                if (PlayerController.instance.GetCurrentINPUT().Equals(door_goal))
+                condition = PlayerController.instance.GetCurrentINPUT().Equals(door_goal);
+
+                condition = LYING ? !condition : condition;
+
+                if (condition)
                 {
                     Pass();
                 }
@@ -337,7 +375,10 @@ public class GameManager : MonoBehaviour
 
             case 1:
 
-                if (PlayerController.instance.current_lane == goal_door)
+                condition = PlayerController.instance.current_lane == goal_door;
+                condition = LYING ? !condition : condition;
+
+                if (condition)
                 {
                     Pass();
                 } else
@@ -349,11 +390,11 @@ public class GameManager : MonoBehaviour
 
             case 2:
 
-                Debug.Log(jklPressed[0] + " " + jklPressed[1] + " " + jklPressed[2]);
-                Debug.Log(key_press_goal + " " + key_press_amount);
+                condition = jklPressed[key_press_goal] == key_press_amount && jklPressed[(key_press_goal + 1) % 3] == 0 && jklPressed[(key_press_goal + 2) % 3] == 0;
+                condition = LYING ? !condition : condition;
 
 
-                if (jklPressed[key_press_goal] == key_press_amount && jklPressed[(key_press_goal + 1) % 3] == 0 && jklPressed[(key_press_goal + 2) % 3] == 0)
+                if (condition)
                 {
                     Pass();
                     break;
@@ -363,10 +404,10 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 3:
+                condition = turning == goal_turn;
+                condition = LYING ? !condition : condition;
 
-                Debug.Log(turning);
-
-                if (turning == goal_turn)
+                if (condition)
                 {
                     Pass();
                     Debug.Log("PASSED");
@@ -391,6 +432,8 @@ public class GameManager : MonoBehaviour
     void Fail()
     {
         instructions_text.text = "Nope!";
+        current_speed = 0f;
+        death_SCREEN.SetActive(true);
     }
 
 
