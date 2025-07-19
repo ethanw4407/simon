@@ -13,7 +13,6 @@ public class Section : MonoBehaviour
     enum type { 
         basic,
         turn, 
-        doors,
 
     }
 
