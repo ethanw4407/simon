@@ -588,7 +588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
+  m_UIInputModule: {fileID: 764537386}
   m_DeviceLostEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -603,7 +603,7 @@ MonoBehaviour:
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 330585545}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,7 +1850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c7ad0b85675624499e3b2da2e776bf6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0189
+      value: -0.01811
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0c7ad0b85675624499e3b2da2e776bf6, type: 3}
       propertyPath: m_LocalPosition.z
